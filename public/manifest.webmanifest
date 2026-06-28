@@ -1,0 +1,16 @@
+{
+  "name": "businessrifa",
+  "short_name": "businessrifa",
+  "description": "Sistema premium de rifas online com Pix, painel administrativo e locacao por R$ 59,99 ao mes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08020f",
+  "theme_color": "#2a063f",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

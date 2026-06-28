@@ -1,0 +1,23 @@
+{
+  "name": "businessrifa",
+  "description": "Sistema premium de rifas online com Pix, painel administrativo e sorteio automatico.",
+  "author": "Leandro Santos",
+  "version": "1.0.0",
+  "type": "module",
+  "bin": "server/server.mjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "api": "node server/server.mjs",
+    "app": "npm.cmd run build && node server/server.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "lucide-react": "latest",
+    "qrcode": "^1.5.4",
+    "react": "latest",
+    "react-dom": "latest",
+    "vite": "latest"
+  }
+}

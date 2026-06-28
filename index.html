@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2a063f" />
+    <meta name="description" content="businessrifa e uma plataforma premium de rifas online com Pix, reservas de numeros, painel administrativo, sorteio automatico e locacao por R$ 59,99 ao mes." />
+    <meta name="keywords" content="businessrifa, rifa online, sistema de rifas, sorteio online, rifa com pix, plataforma premium de rifas, locacao de rifa" />
+    <meta name="author" content="Leandro Santos" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://seu-dominio.com.br/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="https://seu-dominio.com.br/" />
+    <meta property="og:title" content="businessrifa - sistema premium de rifas online com Pix" />
+    <meta property="og:description" content="Crie, alugue e gerencie rifas online com identidade premium em roxo, dourado e preto." />
+    <meta property="og:image" content="/icon.svg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="businessrifa - rifas online premium" />
+    <meta name="twitter:description" content="Sistema profissional para vender numeros online, receber via Pix e sortear com transparencia." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <title>businessrifa - Sistema Premium de Rifas Online com Pix</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "businessrifa",
+        "url": "https://seu-dominio.com.br/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "description": "Sistema premium de rifas online com Pix, painel administrativo, reservas de numeros e sorteio automatico.",
+        "creator": {
+          "@type": "Person",
+          "name": "Leandro Santos"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "59.99",
+          "priceCurrency": "BRL",
+          "availability": "https://schema.org/InStock"
+        }
+      }
+    </script>
+    <script>
+      document.title = 'businessrifa - Sistema Premium de Rifas Online com Pix';
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations()
+          .then((registrations) => Promise.all(registrations.map((registration) => registration.unregister())))
+          .then(() => (window.caches ? caches.keys() : []))
+          .then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+          .catch(() => {});
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
