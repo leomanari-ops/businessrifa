@@ -730,6 +730,18 @@ function AdminPanel({ onRefresh }) {
           <strong>Pagamento recebido</strong>
           <p>Pagamento confirmado. Obrigado por participar com seguranca pela plataforma {brandName}.</p>
         </div>
+        <div className="table">
+          {(data.emails || []).map((email) => (
+            <div className="table-row" key={email.id}>
+              <span>
+                {email.subject}
+                <small>{email.email} - {email.status}</small>
+              </span>
+              <strong>{dateTime.format(new Date(email.created_at))}</strong>
+            </div>
+          ))}
+          {!(data.emails || []).length && <div className="empty-line">Nenhum e-mail automatico gerado ainda.</div>}
+        </div>
       </div>
     </section>
   );

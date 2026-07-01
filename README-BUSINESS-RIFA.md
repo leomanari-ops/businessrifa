@@ -44,6 +44,7 @@ O sistema esta configurado para vender a locacao da plataforma por **R$ 59,99 ao
 - Sorteio automatico por data ou quando todos os numeros forem pagos.
 - Sorteio manual pelo admin.
 - Painel financeiro.
+- Registro de e-mails automaticos no painel administrativo.
 - Politica de privacidade com contato `businessrifa@hotmail.com`.
 - Termos de uso.
 - Rodape institucional com empresa, desenvolvedor, site oficial e copyright.
@@ -96,3 +97,7 @@ npm.cmd install
 npm.cmd run build
 npm.cmd run api
 ```
+
+## Publicacao em producao
+
+Use o guia [DEPLOY-PRODUCAO.md](DEPLOY-PRODUCAO.md) para GitHub, Railway, Render, VPS, dominio, HTTPS e checklist final.

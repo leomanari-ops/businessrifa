@@ -10,7 +10,13 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "api": "node server/server.mjs",
+    "start": "node server/server.mjs",
+    "test:smoke": "node tests/smoke-test.mjs",
+    "test:cleanup": "node tests/cleanup-smoke-data.mjs",
     "app": "npm.cmd run build && node server/server.mjs"
+  },
+  "engines": {
+    "node": ">=24.0.0"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

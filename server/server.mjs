@@ -10,7 +10,9 @@ const root = normalize(join(__dirname, '..'));
 const dist = join(root, 'dist');
 const dataDir = __dirname;
 const dbPath = join(dataDir, 'rifas.sqlite');
-const port = Number(globalThis.process?.env?.PORT || 4173);
+const env = globalThis.process?.env || {};
+const port = Number(env.PORT || 4173);
+const host = env.HOST || (env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1');
 const sessions = new Map();
 const brandName = 'businessrifa';
 const developerName = 'Leandro Santos';
@@ -141,6 +143,17 @@ db.exec(`
     amount REAL NOT NULL,
     created_at TEXT NOT NULL,
     FOREIGN KEY (reservation_id) REFERENCES reservations(id)
+  );
+  CREATE TABLE IF NOT EXISTS email_outbox (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    email TEXT NOT NULL,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'queued',
+    created_at TEXT NOT NULL,
+    sent_at TEXT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
   );
 `);
 
@@ -461,6 +474,25 @@ function financialSummary() {
   return { revenue: money(revenue), pending: money(pending), paidNumbers, entries };
 }
 
+function queueEmail(user, subject, body) {
+  if (!user?.email) return null;
+  const result = db.prepare(`
+    INSERT INTO email_outbox (user_id, email, subject, body, status, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(user.id, user.email, subject, body, 'queued', now());
+  return db.prepare('SELECT * FROM email_outbox WHERE id = ?').get(result.lastInsertRowid);
+}
+
+function emailSummary() {
+  return db.prepare(`
+    SELECT e.*, u.name AS customer
+    FROM email_outbox e
+    LEFT JOIN users u ON u.id = e.user_id
+    ORDER BY e.created_at DESC
+    LIMIT 80
+  `).all();
+}
+
 async function handleApi(request, response, url) {
   if (request.method === 'GET' && url.pathname === '/api/health') return sendJson(response, 200, { status: 'ok', app: brandName, database: 'SQLite' });
 
@@ -477,6 +509,7 @@ async function handleApi(request, response, url) {
         now()
       );
       const user = db.prepare('SELECT * FROM users WHERE id = ?').get(result.lastInsertRowid);
+      queueEmail(user, `Bem-vindo ao ${brandName}`, setting('automaticEmailWelcome'));
       return sendJson(response, 201, { token: createToken(user), user: publicUser(user) });
     } catch {
       return sendJson(response, 409, { message: 'Este e-mail ja esta cadastrado.' });
@@ -659,6 +692,11 @@ async function handleApi(request, response, url) {
         checkoutError = error.message;
       }
     }
+    queueEmail(
+      user,
+      `${brandName}: numeros reservados`,
+      `${setting('automaticEmailReservation')}\n\nTotal: R$ ${total.toFixed(2)}\nNumeros: ${created.map((item) => item.number).join(', ')}`
+    );
     return sendJson(response, 201, { reservations: created, total, checkout, checkoutError });
   }
 
@@ -710,6 +748,12 @@ async function handleApi(request, response, url) {
         reservation.amount,
         now()
       );
+      const paidUser = db.prepare('SELECT * FROM users WHERE id = ?').get(reservation.user_id);
+      queueEmail(
+        paidUser,
+        `${brandName}: pagamento confirmado`,
+        `${setting('automaticEmailPayment')}\n\nNumero confirmado: ${reservation.number}\nValor: R$ ${money(reservation.amount).toFixed(2)}`
+      );
     }
     maybeAutoDraw(reservation.raffle_id);
     return sendJson(response, 200, { message: 'Pagamento Pix confirmado.', raffle: raffleSummary(db.prepare('SELECT * FROM raffles WHERE id = ?').get(reservation.raffle_id)) });
@@ -738,6 +782,7 @@ async function handleApi(request, response, url) {
         JOIN users u ON u.id = r.user_id
         ORDER BY r.reserved_at DESC LIMIT 120
       `).all(),
+      emails: emailSummary(),
       settings: privatePaymentSettings()
     });
   }
